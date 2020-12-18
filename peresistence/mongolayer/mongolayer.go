@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	DB = "myevents"
-	USERS = "users"
+	DB     = "myevents"
+	USERS  = "users"
 	EVENTS = "events"
 )
 
@@ -25,12 +25,11 @@ func NewMongoDBLayer(connection string) (*MongoDBLayer, error) {
 	}, nil
 }
 
-
 func (mgolayer *MongoDBLayer) getFreshSession() *mgo.Session {
 	return mgolayer.session.Copy()
 }
 
-func (mgolayer *MongoDBLayer) FindEvent(id []byte) (Event, error)  {
+func (mgolayer *MongoDBLayer) FindEvent(id []byte) (Event, error) {
 	s := mgolayer.getFreshSession()
 	defer s.Close()
 	e := Event{}
@@ -38,23 +37,23 @@ func (mgolayer *MongoDBLayer) FindEvent(id []byte) (Event, error)  {
 	return e, err
 }
 
-func (mgolayer *MongoDBLayer) FindAllAvailableEvents() ([]Event, error)  {
+func (mgolayer *MongoDBLayer) FindAllAvailableEvents() ([]Event, error) {
 	s := mgolayer.getFreshSession()
 	defer s.Close()
 	es := []Event{}
-	err := s.DB(DB).C(EVENTS).Find(nil ).All(&es)
+	err := s.DB(DB).C(EVENTS).Find(nil).All(&es)
 	return es, err
 }
 
-func (mgolayer *MongoDBLayer) FindEventByName(name string) (Event, error)  {
+func (mgolayer *MongoDBLayer) FindEventByName(name string) (Event, error) {
 	s := mgolayer.getFreshSession()
 	defer s.Close()
 	e := Event{}
-	err := s.DB(DB).C(EVENTS).Find(bson.M{"name": name }).One(&e)
+	err := s.DB(DB).C(EVENTS).Find(bson.M{"name": name}).One(&e)
 	return e, err
 }
 
-func (mgolayer *MongoDBLayer) AddEvent(e Event) ([]byte, error)  {
+func (mgolayer *MongoDBLayer) AddEvent(e Event) ([]byte, error) {
 	s := mgolayer.getFreshSession()
 	defer s.Close()
 	if !e.ID.Valid() {
